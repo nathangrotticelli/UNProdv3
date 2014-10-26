@@ -27,7 +27,9 @@
   <div class="eventScroller" ng-repeat="event in events | orderObjectBy:'timeString':true |  orderObjectBy:'start_time':true | orderObjectBy:'startYear':false " ng-click="go_here(event)">
     <img ng-show="{{event.cover}}" class="full-image" src="{{event.cover}}" >
     <img ng-hide="event.cover!=undefined" ng-click="go_here(event)" class="full-image" src="http://i62.tinypic.com/2zznq55.jpg" >
-		<div class="eventInfoSection">
+      		<div class="eventInfoSection">
+             <a ng-init="event.watched=foll9(userItem.watchList,event)" ng-hide="event.watched" ng-click="watchAction(event); $event.stopPropagation();" class="ion-ios7-eye-outline watchBtn"></a>
+             <a ng-show="event.watched" ng-click="watchAction(event); $event.stopPropagation();" class="ion-ios7-eye watchBtn"></a>
       <h3 id="eventName">{{event.name}}</h3>
       <p id="eventLocation" ng-if="event.location!=null"><i class="icon ion-ios7-location"></i> {{event.location}}</p>
       <p class="eventDT" ng-if="event.start_time!=null">{{event.start_time}}</p> <p class="eventDT" ng-if="event.timeOfEvent!=null">{{event.timeOfEvent}}</p>

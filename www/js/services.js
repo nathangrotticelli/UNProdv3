@@ -2,6 +2,7 @@ angular.module('sociogram.services', [])
 .factory('PetService', function() {
   var events = {};
   var single = {};
+  var userItem = {};
   var school = "";
   var unFriends = [];
   var userProfId = "";
@@ -28,6 +29,12 @@ angular.module('sociogram.services', [])
             getSchool: function () {
                 return school;
             },
+            flipWatched: function(event){
+              events[event.name].watched=!events[event.name].watched;
+            },
+             getWatched: function(event){
+              return events[event.name].watched;
+            },
               setUserId: function(userId) {
                 // alert('setting id');
                 // alert(userProfId);
@@ -44,6 +51,15 @@ angular.module('sociogram.services', [])
             },
             getUNFriends: function () {
                 return unFriends;
+            },
+             setUser: function(uI) {
+                // alert('setting id');
+                // alert(userProfId);
+                userItem = uI;
+
+            },
+            getUser: function () {
+                return userItem;
             },
             setNewUser: function(userIs){
               newUser = userIs;

@@ -565,6 +565,8 @@ angular.module('sociogram.controllers', ['ionic'])
               //DE is equal to doesnt exist
               //if user exists
               if(userItem!=="DE"){
+                PetService.setUser(userItem);
+                // alert(userItem.watchList);
                 //check how many current events exist
                 currentSchoolCheck();
                 //adds existing private events
@@ -677,6 +679,7 @@ angular.module('sociogram.controllers', ['ionic'])
     };
 
     $scope.goBack = function() {
+//this is lagging, why?
     $location.path('/app/person/me/feed');
     };
 
@@ -815,7 +818,7 @@ angular.module('sociogram.controllers', ['ionic'])
           $scope.showAlert("Connection to the server could not be acheived at this time. Increase your WiFi/service or try again later.","Failed.");
         }).success(function(res){
           // alert("Followed yall!");
-          alert(res.success);
+          // alert(res.success);
           if(res.success!='follow already'){
              $scope.followCount++;
           }
@@ -966,6 +969,37 @@ angular.module('sociogram.controllers', ['ionic'])
       });
     };
 
+    $scope.userAlert = function(thing){
+      alert(thing);
+    };
+
+// $scope.watched = false;
+
+    $scope.foll9 = function(watchList,event){
+      // alert(watchedIndex);
+      for(i=0;i<watchList.length;i++){
+         if(watchList[i].name==event.name){
+          // alert('yes');
+           return true;
+          }
+        }
+
+  // if(friendFollowIndex>-1){
+  //   return true;
+  // }
+  // else{
+  //   return false;
+  // }
+};
+
+
+
+    $scope.watchEvent = function(){
+      alert('here');
+      // $state.go("app.feed");
+      $scope.watched = true;
+    };
+
     $scope.newEventSend = function(name,email,date,time,address,info){
       if(name==undefined||date==undefined||time==undefined||address==undefined){
        $scope.showAlert("Please make sure you haven't left any fields empty.","Missing Fields.");
@@ -1073,6 +1107,7 @@ $scope.getNotifications();
 $scope.findFriends2();
 //try runn friends 2 to set
 $scope.unFriends = PetService.getUNFriends();
+$scope.userItem = PetService.getUser();
 
 $scope.foll8 = function(friendFollowIndex){
 
@@ -1083,7 +1118,151 @@ $scope.foll8 = function(friendFollowIndex){
     return false;
   }
 }
+   $scope.watchAction1 = function (userWatchList,event) {
 
+   }
+    $scope.watchAction = function (event) {
+      // alert($scope.userItem.watchList[0]);
+         // alert(event.name);
+         // alert(event.watched);
+
+         // alert($scope.event.watched);
+      notDate = "19/29/1993";
+      // alert(userWatchList[0]);
+       // for(i=0;i<userWatchList.length;i++){
+       //   if(userWatchList[i].name==event.name){
+       //    alert('yes');
+       //     event.watched=true;
+       //    }
+       //  }
+      // unFriends = PetService.getUNFriends();
+      // alert(unFriends[0].userName);
+      // alert(JSON.stringify(unFriends[0]));
+      // alert(unFriends[key]);
+      // alert(unFriends[friend.userName].userName);
+
+
+    //   // var unFriends = PetService.getUNFriends();
+    //   alert(friend.userName);
+    //   alert(friend.followers.indexOf(userProfId)>-1);
+    //   if(friend.followers.indexOf(userProfId)>-1){//if you follow them
+    //     alert(friend.userName);
+    //    // add to array locally,
+    //    for(i=0;i<$scope.unFriends.length;i++){//for all un friends
+    //       if($scope.unFriends[i].followers.indexOf(userProfId)>-1){//if
+    //          // alert(friend.followers.indexOf(userProfId)>-1);
+
+    //      $scope.unFriends[i].followers.pop(userProfId);
+    //      PetService.setUNFriends($scope.unFriends);
+    //      alert($scope.unFriends[i].userName);
+    //      alert($scope.unFriends[i].followers);
+    //      // PetService.setUNFriends(unFriends);
+
+    //        // $scope.unFriends = unFriends;
+    //     //
+    //   }
+    //  }
+    // }
+    // var userProfId = PetService.getUserId();
+    if(event.name.indexOf("!")>-1||event.name.indexOf(".")>-1||event.name.indexOf("?")>-1){
+      // alert(event.name);
+         var message = "You watched the event: "+event.name;
+         var message2 = userName+" watched the event: "+event.name;
+
+    }
+else{
+     var message = "You watched the event: "+event.name+".";
+     var message2 = userName+" watched the event: "+event.name+".";
+}
+
+
+    // alert(event.name);
+    // alert(event);
+    // alert(message);
+    // alert(message2);
+    // alert($scope.foll9(userWatchList,event));
+
+    if(event.watched==true){
+      //unwatch event
+      alert("true");
+       event.watched=!event.watched;
+    }
+    else{
+
+      $http.post('http://stark-eyrie-6720.herokuapp.com/watchEvent',
+        {userProfId:userProfId,
+          message:message,
+          message2:message2,
+          notDate:notDate,
+          eventObj:event,
+          eventName:event.name
+        }).error(function(){
+          $scope.showAlert("Connection to the server could not be acheived at this time. Increase your WiFi/service or try again later.","Failed.");
+        }).success(function(res){
+
+          $scope.userItem.watchList.push(event);
+          $scope.notifications.push({message:message,notDate:notDate});
+          $scope.events[event.name].watched=!$scope.events[event.name].watched;
+
+
+          // PetService.flipWatched(event);
+           // event.watched=!event.watched;
+           // alert('here');
+           // alert($scope.events[event.name].watched);
+          // $scope.events[event.name].watched = !event.watched;
+          // alert($scope.events[event.name].watched);
+          // PetService.setEvents($scope.events);
+          // $scope.loadFeed();
+          // PetService.setEvents($scope.events);
+          // alert(res.success);
+          // $state.go("app.friends");
+          // alert("worked!");
+          // alert();
+        });
+
+      // alert('event watched');
+    }
+      // for(q=0;q<$scope.unFriends.length;q++){
+     //    if($scope.unFriends[q].userProfId==followingId){
+     //      if($scope.unFriends[q].followers.indexOf(userProfId)>-1){
+     //        $scope.unFriends[q].followers.pop(userProfId);
+     //        $http.post('http://stark-eyrie-6720.herokuapp.com/unfollow',
+     //    {userProfId:userProfId,
+     //      message:message,
+     //      followingId:followingId}).error(function(){
+     //      $scope.showAlert("Connection to the server could not be acheived at this time. Increase your WiFi/service or try again later.","Failed.");
+     //    }).success(function(res){
+     //      // $state.go("app.friends");
+     //      // alert("worked!");
+     //      // alert();
+     //    });
+     //   }
+     //        else{
+
+     //     $scope.unFriends[q].followers.push(userProfId);
+     //     var notDate = "9/17/1995";
+     //     // alert(message);
+     //     // alert
+     //     // $scope.notifications.push({message:message,date:date});
+     //        $http.post('http://stark-eyrie-6720.herokuapp.com/follow',
+     //    {userProfId:userProfId,
+     //      followingId:followingId,
+     //      message:message,
+     //      notDate:notDate}).error(function(){
+     //      $scope.showAlert("Connection to the server could not be acheived at this time. Increase your WiFi/service or try again later.","Failed.");
+     //    }).success(function(res){
+     //       // add notification that you added a follower
+
+     //      // $state.go("app.friends");
+     //      // alert(res.success);
+     //      // alert();
+     //    });
+
+     //  }
+     // }
+    // }
+
+   };
 
     // $scope.followed1 = friendFollowed(friend);
       // alert();
@@ -1096,6 +1275,9 @@ $scope.foll8 = function(friendFollowIndex){
       // PetService.setSingle(eventName);
       // //changes page and controller
       // $state.go("app.event-detail");
+      $scope.getWatch = function(event){
+        return PetService.getWatched(event);
+      };
     $scope.followAction = function (friend) {
       // unFriends = PetService.getUNFriends();
       // alert(unFriends[0].userName);
@@ -1252,10 +1434,10 @@ $scope.foll8 = function(friendFollowIndex){
      $state.go("app.addAnEvent");
     };
 
-    var loadFeed = function() {
+   $scope.loadFeed = function() {
       $scope.events = PetService.getEvents();
     };
 
     // $scope.countFollowers();
-    loadFeed();
+    $scope.loadFeed();
   });
