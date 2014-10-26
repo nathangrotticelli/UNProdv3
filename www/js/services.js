@@ -5,6 +5,7 @@ angular.module('sociogram.services', [])
   var school = "";
   var unFriends = [];
   var userProfId = "";
+  var newUser = "no";
   // var unFriends = [];
   // var notifications = {};
 
@@ -43,6 +44,13 @@ angular.module('sociogram.services', [])
             },
             getUNFriends: function () {
                 return unFriends;
+            },
+            setNewUser: function(userIs){
+              newUser = userIs;
+
+            },
+            getNew: function () {
+                return newUser;
             },
              refreshEvents: function(value) {
 

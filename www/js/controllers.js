@@ -79,6 +79,8 @@ angular.module('sociogram.controllers', ['ionic'])
           userSchool: schoolItem.schoolName}
           ).then(function(){
             $scope.noPop='true';
+            alert('i am alerting of a new user!');
+             PetService.setNewUser("yes");
             $scope.facebookLogin(schoolItem.schoolName);
           }).then(function(){
             setTimeout(function() { $scope.showAlert('Your U Nightlife feed consists of a refreshing blend of events, which can only be seen right here on the app by verified students. <br>To navigate or reach out to us at any time, just use the menu button in the right hand corner.<br> <br>Smile,<br> U Nightlife Team','Welcome!') },2500);
@@ -102,6 +104,8 @@ angular.module('sociogram.controllers', ['ionic'])
           userSchool: schoolItem.schoolName}
           ).then(function(){
             $scope.noPop='true';
+            alert('i am alerting of a new user!');
+             PetService.setNewUser("yes");
             $scope.facebookLogin(schoolItem.schoolName);
           }).then(function(){
             setTimeout(function() { $scope.showAlert('Your U Nightlife feed consists of a refreshing blend of events, which can only be seen right here on the app by verified students. <br>To navigate or reach out to us at any time, just use the menu button in the right hand corner.<br> <br>Smile,<br> U Nightlife Team','Welcome!') },2500);
@@ -280,6 +284,7 @@ angular.module('sociogram.controllers', ['ionic'])
       var checkAllowed = function(){
         // if they have the required amount of friends or correct email, create user and then take them to the exisiting user flow
         if(Math.floor(schoolFriendCount)>=Math.floor(schoolItem.schoolFriendMin)||userEmail.indexOf(schoolItem.emailEnding)>-1){
+          PetService.setNewUser("yes");
           $http.post('http://stark-eyrie-6720.herokuapp.com/userPost',
           {firstNameLetter: firstNameLetter,
           userProfId: userProfId,
@@ -780,17 +785,91 @@ angular.module('sociogram.controllers', ['ionic'])
     $scope.popover.remove();
   });
 
-  $scope.userProfId = PetService.getUserId();
-  // userProfId = PetService.getUserId();
+  $scope.followNot = function(not){
+    var userProfId = PetService.getUserId();
+    // alert(tap);
 
-$scope.unFriends = PetService.getUNFriends();
+//call follow function with user object
+    if(not.tap=="follow"){
+      //follow the userId
+      // for(i=0;i<$scope.unFriends.length;i++){
+      //   if($scope.unFriends[i].userProfId==not.followId){
+          // alert("he1111");
+          // if($scope.unFriends[i].followers.indexOf(userProfId)>-1){
+          //   // alert('not followed');
+          // }
+          // else{
+            // alert('hwe233333');
 
-  $scope.findFriends = function(){
+              var followingId = not.followId;
+              var notDate = "9/17/1995";
+              var message = userName+" just followed you.";
+         // alert(message);
+         // alert
+         // $scope.notifications.push({message:message,date:date});
+            $http.post('http://stark-eyrie-6720.herokuapp.com/follow',
+        {userProfId:userProfId,
+          followingId:followingId,
+          message:message,
+          notDate:notDate}).error(function(){
+          $scope.showAlert("Connection to the server could not be acheived at this time. Increase your WiFi/service or try again later.","Failed.");
+        }).success(function(res){
+          // alert("Followed yall!");
+          // alert(res.success);
+          if(res.success!='follow already'){
+             $scope.followCount++;
+          }
+
+           // add notification that you added a follower
+
+          // $state.go("app.friends");
+          // alert(res.success);
+          // alert();
+        });
+        //  var message = userName+" just followed you.";
+        //    var notDate = "fake Dte 9/1021/12";
+
+        // $http.post('http://stark-eyrie-6720.herokuapp.com/follow',
+        // {userProfId:userProfId,
+        //   followingId:followingId,
+        //   message:message,
+        //   notDate:notDate}).error(function(){
+        //   $scope.showAlert("Connection to the server could not be acheived at this time. Increase your WiFi/service or try again later.","Failed.");
+        // }).success(function(res){
+        //    // alert(res.success);
+        //    if(res.success=='followed'){
+
+        //     $scope.unFriends[q].followers.push(userProfId);
+        //     $scope.followCount++;
+        //    }
+        //    // add notification that you added a follower
+
+        //   // $state.go("app.friends");
+        //   // alert("worked!");
+        //   // alert();
+        // });
+
+          // }
+      //   }
+      // }
+
+
+    }
+    else{
+      //do nothing
+      alert('ney');
+    }
+
+  };
+
+   $scope.findFriends2 = function(){
+     var nU = PetService.getNew();
+     if(nU=="yes"){
     userProfId = PetService.getUserId();
-     // alert("error");
+    //  // alert("error");
      OpenFB.get("/"+userProfId+"?fields=friends",{limit:1300}).success(function(res){
       fbFriends = res.friends.data;//this is an array with friend objects
-         $http.post('http://stark-eyrie-6720.herokuapp.com/findFriends', {userProfId:userProfId, fbFriends:fbFriends}).error(function(){
+         $http.post('http://stark-eyrie-6720.herokuapp.com/findFriends', {userProfId:userProfId,userSchool:userSchool, fbFriends:fbFriends}).error(function(){
           alert("error");
         }).success(function(res){
           // alert("success");
@@ -799,6 +878,65 @@ $scope.unFriends = PetService.getUNFriends();
           // alert(res.userIds);
           // alert(res.userIds[0].userName);
           // alert(res.userIds[1].userName);
+            PetService.setNewUser("no");
+            $http.post('http://stark-eyrie-6720.herokuapp.com/newFriend', {fbFriends:res.userIds,userName:userName,userProfId:userProfId}).error(function(){
+          // alert("error");
+        }).success(function(idc){
+
+          alert('yay');
+        })
+
+          // PetService.setUNFriends(res.userIds);
+          // $state.go("app.friends");
+
+          // .success(function(res){
+
+          // });
+           // $scope.unFriends = res.userIds;
+          // $state.go("app.friends");
+          // alert(res.userIds[2].userName);
+           // res.json({Item: user});
+        });
+     });
+//i want to hit this and send a notification to all friends, with my user info
+
+
+  }
+};
+
+
+  $scope.userProfId = PetService.getUserId();
+  // userProfId = PetService.getUserId();
+
+
+
+  $scope.findFriends = function(){
+    // var nU = PetService.getNew();
+
+    // alert(nU);
+    $scope.unFriends = PetService.getUNFriends();
+    userProfId = PetService.getUserId();
+     // alert("error");
+     OpenFB.get("/"+userProfId+"?fields=friends",{limit:1300}).success(function(res){
+      fbFriends = res.friends.data;//this is an array with friend objects
+         $http.post('http://stark-eyrie-6720.herokuapp.com/findFriends', {userProfId:userProfId,userSchool:userSchool, fbFriends:fbFriends}).error(function(){
+          alert("error");
+        }).success(function(res){
+          // alert("success");
+          // alert(userProfId);
+          // alert(res);
+          // alert(res.userIds);
+          // alert(res.userIds[0].userName);
+          // alert(res.userIds[1].userName);
+        //   if(nU=="yes"){
+        //     PetService.setNewUser("no");
+        //     $http.post('http://stark-eyrie-6720.herokuapp.com/newFriend', {fbFriends:res.userIds,userName:userName,userProfId:userProfId}).error(function(){
+        //   // alert("error");
+        // }).success(function(idc){
+        //   // alert('yay');
+        // })
+        //   }
+
           PetService.setUNFriends(res.userIds);
            $state.go("app.friends");
           // .success(function(res){
@@ -932,6 +1070,19 @@ $scope.getNotifications = function(){
 
 $scope.countFollowers();
 $scope.getNotifications();
+$scope.findFriends2();
+//try runn friends 2 to set
+$scope.unFriends = PetService.getUNFriends();
+
+$scope.foll8 = function(friendFollowIndex){
+
+  if(friendFollowIndex>-1){
+    return true;
+  }
+  else{
+    return false;
+  }
+}
 
 
     // $scope.followed1 = friendFollowed(friend);
@@ -993,6 +1144,7 @@ $scope.getNotifications();
         });
        }
             else{
+
          $scope.unFriends[q].followers.push(userProfId);
          var notDate = "9/17/1995";
          // alert(message);
@@ -1008,7 +1160,7 @@ $scope.getNotifications();
            // add notification that you added a follower
 
           // $state.go("app.friends");
-          // alert("worked!");
+          // alert(res.success);
           // alert();
         });
 

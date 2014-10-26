@@ -50,8 +50,10 @@
        <hr>
        <div class="notifications2" ng-repeat="not in notifications">
        <div class="ion-navicon">
-       <h5>{{not.date}}</h5>
-       <h5>{{not.message}}</h5>
+       <div ng-click="followNot(not)">
+        <h5>{{not.date}}</h5>
+        <h5>{{not.message}}</h5>
+       </div>
        </div>
 
        </div>
