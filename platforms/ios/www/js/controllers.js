@@ -793,6 +793,7 @@ angular.module('sociogram.controllers', ['ionic'])
 
   $scope.openPopover = function($event) {
     $scope.popover.show($event);
+    // $scope.newNot==false;
   };
   $scope.closePopover = function() {
     $scope.popover.hide();
@@ -968,6 +969,7 @@ for(event in $scope.events){
 
   $scope.userProfId = PetService.getUserId();
   $scope.events = PetService.getEvents();
+  $scope.newNot = false;
   // userProfId = PetService.getUserId();
 
 
@@ -1146,28 +1148,29 @@ $scope.countFollowers = function(){
   //     }
 
 };
-$scope.getNotifications = function(){
-  $scope.notifications = 'n/a';
-  $http.post('http://stark-eyrie-6720.herokuapp.com/notifications',
-        {userProfId:userProfId}).error(function(){
-          $scope.showAlert("Connection to the server could not be acheived at this time. Increase your WiFi/service or try again later.","Failed.");
-        }).success(function(res){
-          // return res.count;
-          $scope.notifications = res.notifications;
-          // count = res.count;
-          // alert(res.count);
-          // alert(res.notifications[0].message);
-          // $scope.followCount = res.count;
-          // $state.go("app.friends");
-          // alert("worked!");
-          // alert();
-        });
 
-}
+// $scope.getNotifications = function(){
+//   $scope.notifications = 'n/a';
+//   $http.post('http://stark-eyrie-6720.herokuapp.com/notifications',
+//         {userProfId:userProfId}).error(function(){
+//           $scope.showAlert("Connection to the server could not be acheived at this time. Increase your WiFi/service or try again later.","Failed.");
+//         }).success(function(res){
+//           // return res.count;
+//           $scope.notifications = res.notifications;
+//           // count = res.count;
+//           // alert(res.count);
+//           // alert(res.notifications[0].message);
+//           // $scope.followCount = res.count;
+//           // $state.go("app.friends");
+//           // alert("worked!");
+//           // alert();
+//         });
 
+// }
 
+$scope.notifications = userItem.notifications;
 $scope.countFollowers();
-$scope.getNotifications();
+// $scope.getNotifications();
 $scope.findFriends2();
 //try runn friends 2 to set
 $scope.unFriends = PetService.getUNFriends();
@@ -1465,13 +1468,47 @@ else{
     $scope.predicate=event.timeOfEvent;
 
      $scope.alert3 = function(){
+      var userItem = PetService.getUser();
+      // alert(userItem);
+      var notCount = userItem.notifications.length;
+      var schoolName = userItem.userSchool;
+      var userEmail = userItem.userEmail;
+      // alert(notCount);
+      // alert(userEmail);
+      // alert(schoolName);
+
+      $http.post('http://stark-eyrie-6720.herokuapp.com/getUser',{userEmail: userEmail, userSchool:schoolName}).success(function(red){
+            // userItem = red.Item;
+            // alert('here');
+
+            // alert('here2');
+            if(red.Item.banned==="banned"){
+              $scope.showAlert('This account has been banned for violating our Terms of Use. Contact us at UNightlifeTeam@gmail.com if you think is a mistake.');
+              $state.go('app.login');
+            }
+            else{
+              PetService.setUser(red.Item);
+              // $scope.notifications = userItem.notifications;
+            $scope.notifications = red.Item.notifications;
+              var notCount2 = red.Item.notifications.length;
+                // alert(notCount2);
+              if(notCount2>notCount){
+                $scope.newNot = true;
+                // alert("New Notification");
+              }
+
+            }
+
+            });
+      // $http.post('http://stark-eyrie-6720.herokuapp.com/getN', {schoolName:schoolName}).error(function(){
 
 
-        schoolName = PetService.getSchool();
+
         // alert(schoolName);
          $http.post('http://stark-eyrie-6720.herokuapp.com/getSchool', {schoolName:schoolName}).error(function(){
           $scope.$broadcast('scroll.refreshComplete');
         }).success(function(res){
+          // alert(res.Item.schoolName);
 
           currentList = {};
           var today = new Date();
@@ -1535,7 +1572,7 @@ else{
           // loadFeed();
           $scope.$broadcast('scroll.refreshComplete');
         })
-      }
+      };
     $scope.go_event = function () {
       $state.go("app.newEventForm");
     };

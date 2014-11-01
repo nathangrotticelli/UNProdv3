@@ -16,7 +16,8 @@
  <ion-content scroll="false" scrollbar-y="false" class="mesh" animation="slide-left-right-ios7">
 
  <div class = "unMenu2 ">
-  <button class="profileBtn" ng-click="openPopover($event)">Open</button>
+  <button ng-show="newNot==false" class="profileBtn" ng-click="openPopover($event)">Open</button>
+  <button ng-show="newNot==true" class="profileBtn2" ng-click="openPopover($event); newNot=false;">New Notification</button>
 <a class="ion-navicon" menu-toggle="right"></a></div>
   <ion-scroll id="eventList">
 

@@ -49,6 +49,11 @@ padding: 6%;
 position: absolute!important;
 left: 40%;
 }
+.profileBtn2{
+position: absolute!important;
+left: 40%;
+background-color: red;
+}
 .notifications{
 	padding: 5%;
 }
