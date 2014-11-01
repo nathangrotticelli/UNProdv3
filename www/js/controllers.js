@@ -20,15 +20,21 @@ angular.module('sociogram.controllers', ['ionic'])
     $scope.goEvents = function(){
       $location.path('/app/person/me/feed');
       //allows for scroll position on the event feed to be maintained. Think about doing this for the other menu buttons
-    }
+    };
 
     $scope.goAdd = function(){
       $state.go('app.addAnEvent');
-    }
+    };
 
     $scope.goHelp = function(){
       $state.go('app.help');
-    }
+    };
+
+     $scope.shareBtn = function(a,b,c,d){
+      analytics.trackEvent('button', 'click', 'share button', 1);
+      // ga('send', 'event', 'button', 'click', 'share button', 1);
+     window.plugins.socialsharing.share(a,b,c,d);
+    };
 
   })
 
@@ -776,6 +782,11 @@ angular.module('sociogram.controllers', ['ionic'])
   }).then(function(popover) {
     $scope.popover = popover;
   });
+   $scope.shareBtn = function(a,b,c,d){
+      analytics.trackEvent('button', 'click', 'share button', 1);
+      // ga('send', 'event', 'button', 'click', 'share button', 1);
+     window.plugins.socialsharing.share(a,b,c,d);
+    };
 
   $scope.openPopover = function($event) {
     $scope.popover.show($event);

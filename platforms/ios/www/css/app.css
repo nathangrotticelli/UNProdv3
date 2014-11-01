@@ -42,6 +42,9 @@ color:white!important;
 padding: 6%;
 
 }
+.invFrTxt{
+	color:blue;
+}
 .profileBtn{
 position: absolute!important;
 left: 40%;
