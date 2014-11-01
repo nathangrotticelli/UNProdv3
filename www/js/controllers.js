@@ -978,7 +978,12 @@ angular.module('sociogram.controllers', ['ionic'])
     $scope.foll9 = function(watchList,event){
       // alert(watchedIndex);
       for(i=0;i<watchList.length;i++){
-         if(watchList[i].name==event.name){
+        // if(event.name=="INVASION 9.0"){
+// alert(watchList[i].name);
+//         alert(event.name);
+        // }
+
+         if(watchList[i].name==event.name&&watchList[i].start_time==event.start_time){
           // alert('yes');
            return true;
           }
@@ -1163,6 +1168,7 @@ $scope.foll8 = function(friendFollowIndex){
     //   }
     //  }
     // }
+    // alert('here');
     // var userProfId = PetService.getUserId();
     if(event.name.indexOf("!")>-1||event.name.indexOf(".")>-1||event.name.indexOf("?")>-1){
       // alert(event.name);
@@ -1181,15 +1187,25 @@ else{
     // alert(message);
     // alert(message2);
     // alert($scope.foll9(userWatchList,event));
-
+ // alert('here2');
     if(event.watched==true){
-      //unwatch event
-      alert("true");
-       event.watched=!event.watched;
-    }
-    else{
+       for(m=0;m<$scope.userItem.watchList.length;m++){
+        // if($scope.userItem.watchList[m]==event){
+          $scope.userItem.watchList.splice($scope.userItem.watchList.indexOf(event),1);
 
-      $http.post('http://stark-eyrie-6720.herokuapp.com/watchEvent',
+        // }
+        // $scope.userItem.watchList.push(event);
+      }
+
+         $scope.notifications = $scope.notifications.filter(function (el) {
+                        return el.message !== message;
+                       });
+
+          // .splice({message:message,notDate:notDate});
+          $scope.events[event.name.replace(/\./g,"")].watched=!$scope.events[event.name.replace(/\./g,"")].watched;
+        // });
+      //unwatch event
+       $http.post('http://stark-eyrie-6720.herokuapp.com/unwatchEvent',
         {userProfId:userProfId,
           message:message,
           message2:message2,
@@ -1200,9 +1216,30 @@ else{
           $scope.showAlert("Connection to the server could not be acheived at this time. Increase your WiFi/service or try again later.","Failed.");
         }).success(function(res){
 
-          $scope.userItem.watchList.push(event);
-          $scope.notifications.push({message:message,notDate:notDate});
-          $scope.events[event.name].watched=!$scope.events[event.name].watched;
+
+      })
+    }
+    else{
+
+      $scope.events[event.name.replace(/\./g,"")].watched=!$scope.events[event.name.replace(/\./g,"")].watched;
+      // alert('here3');
+      $scope.userItem.watchList.push(event);
+      // alert('here4');
+      $scope.notifications.push({message:message,notDate:notDate});
+      // alert('here5');
+
+      $http.post('http://stark-eyrie-6720.herokuapp.com/watchEvent',
+        {userProfId:userProfId,
+          message:message,
+          message2:message2,
+          notDate:notDate,
+          eventObj:event
+        }).error(function(){
+          $scope.showAlert("Connection to the server could not be acheived at this time. Increase your WiFi/service or try again later.","Failed.");
+        }).success(function(res){
+
+
+
 
 
           // PetService.flipWatched(event);
@@ -1313,7 +1350,7 @@ else{
       for(q=0;q<$scope.unFriends.length;q++){
         if($scope.unFriends[q].userProfId==followingId){
           if($scope.unFriends[q].followers.indexOf(userProfId)>-1){
-            $scope.unFriends[q].followers.pop(userProfId);
+            $scope.unFriends[q].followers.splice($scope.unFriends[q].followers.indexOf(userProfId),1);
             $http.post('http://stark-eyrie-6720.herokuapp.com/unfollow',
         {userProfId:userProfId,
           message:message,
