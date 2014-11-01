@@ -787,6 +787,9 @@ angular.module('sociogram.controllers', ['ionic'])
       // ga('send', 'event', 'button', 'click', 'share button', 1);
      window.plugins.socialsharing.share(a,b,c,d);
     };
+    $scope.foll6 = function(timestamp){
+      return new Date (timestamp).toDateString();
+    };
 
   $scope.openPopover = function($event) {
     $scope.popover.show($event);
@@ -1188,8 +1191,8 @@ $scope.foll8 = function(friendFollowIndex){
          // alert(event.watched);
 
          // alert($scope.event.watched);
-      notDate = "19/29/1993";
-      tap = "event";
+      // notDate = "19/29/1993";
+      var tap = "event";
       // alert(userWatchList[0]);
        // for(i=0;i<userWatchList.length;i++){
        //   if(userWatchList[i].name==event.name){
@@ -1275,9 +1278,7 @@ else{
         {userProfId:userProfId,
           message:message,
           message2:message2,
-          notDate:notDate,
-          eventObj:event,
-          eventName:event.name
+          eventObj:event
         }).error(function(){
           $scope.showAlert("Connection to the server could not be acheived at this time. Increase your WiFi/service or try again later.","Failed.");
         }).success(function(res){
@@ -1286,13 +1287,16 @@ else{
       })
     }
     else{
+      //generate notDate to current timestamp
+      var notDate = Date.now();
 
       $scope.events[event.name.replace(/\./g,"")].watched=!$scope.events[event.name.replace(/\./g,"")].watched;
       // alert('here3');
       $scope.userItem.watchList.push(event);
       // alert('here4');
-      $scope.notifications.push({message:message,notDate:notDate,tap:tap});
+      $scope.notifications.push({message:message,date:notDate,tap:tap});
       // alert('here5');
+      //
 
       $http.post('http://stark-eyrie-6720.herokuapp.com/watchEvent',
         {userProfId:userProfId,
@@ -1379,6 +1383,7 @@ else{
       // PetService.setSingle(eventName);
       // //changes page and controller
       // $state.go("app.event-detail");
+      $scope.predicate1 = '-date';
       $scope.getWatch = function(event){
         return PetService.getWatched(event);
       };
@@ -1414,6 +1419,7 @@ else{
     var followingId = friend.userProfId;
     var message = userName+" just followed you.";
 
+
       for(q=0;q<$scope.unFriends.length;q++){
         if($scope.unFriends[q].userProfId==followingId){
           if($scope.unFriends[q].followers.indexOf(userProfId)>-1){
@@ -1432,7 +1438,7 @@ else{
             else{
 
          $scope.unFriends[q].followers.push(userProfId);
-         var notDate = "9/17/1995";
+         var notDate = Date.now();
          // alert(message);
          // alert
          // $scope.notifications.push({message:message,date:date});
