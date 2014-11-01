@@ -858,6 +858,50 @@ angular.module('sociogram.controllers', ['ionic'])
 
 
     }
+    else if(not.tap=="event"){
+      // alert('event');
+       // alert(not.message.split(": ")[1]);
+
+       var i = not.message.indexOf(': ');
+var splits = not.message.slice(i+1);
+// alert("here");
+// alert(splits);
+// alert("12345.00.".slice(0,-1));
+var eventName = splits.slice(0,-1);
+// alert(PetService.getEvents());
+// alert(PetService.getEvents());
+// alert(JSON.stringify($scope.events));
+alert(eventName);
+for(event in $scope.events){
+  // alert($scope.events[event].name);
+  // alert(eventName);
+  // alert($scope.events[event].name.slice(0,0));
+  // alert(eventName.slice(0,0));
+  // alert($scope.events[event].name.indexOf(eventName)>-1);
+   // alert(eventName.indexOf($scope.events[event].name)>-1);
+  // alert($scope.events[event]==eventName);
+  // alert(event.start_time);
+  if(eventName.indexOf($scope.events[event].name.slice(0,-1))>-1){
+
+     $scope.go_here($scope.events[event]);
+  }
+}
+// alert($scope.event[eventName]);
+// alert($scope.events[eventName].name);
+// $scope.events = PetService.getEvents()
+ // $scope.go_here($scope.events[0,$scope.events.indexOf({"name":eventName})]);
+//  console.log(a[0,a.indexOf('2')])
+// for(x=0;x<$scope.events.length;x++){
+//   alert(eventName);
+//   alert($scope.events[x].name);
+//   if($scope.events[x].name==eventName){
+
+
+//      $scope.go_here($scope.events[x]);
+//   }
+// }
+
+    }
     else{
       //do nothing
       alert('ney');
@@ -909,6 +953,7 @@ angular.module('sociogram.controllers', ['ionic'])
 
 
   $scope.userProfId = PetService.getUserId();
+  $scope.events = PetService.getEvents();
   // userProfId = PetService.getUserId();
 
 
@@ -1133,6 +1178,7 @@ $scope.foll8 = function(friendFollowIndex){
 
          // alert($scope.event.watched);
       notDate = "19/29/1993";
+      tap = "event";
       // alert(userWatchList[0]);
        // for(i=0;i<userWatchList.length;i++){
        //   if(userWatchList[i].name==event.name){
@@ -1170,7 +1216,7 @@ $scope.foll8 = function(friendFollowIndex){
     // }
     // alert('here');
     // var userProfId = PetService.getUserId();
-    if(event.name.indexOf("!")>-1||event.name.indexOf(".")>-1||event.name.indexOf("?")>-1){
+    if(event.name[event.name.length-1].indexOf("!")>-1||event.name[event.name.length-1].indexOf(".")>-1||event.name[event.name.length-1].indexOf("?")>-1){
       // alert(event.name);
          var message = "You watched the event: "+event.name;
          var message2 = userName+" watched the event: "+event.name;
@@ -1198,6 +1244,15 @@ else{
       }
 
          $scope.notifications = $scope.notifications.filter(function (el) {
+                        // if(el.message!==message){
+                        //   return true;
+
+                        // }
+                        // else{
+                        //      if(el.notDate!==notDate){
+                        //       return true;
+                        //   }
+                        // }
                         return el.message !== message;
                        });
 
@@ -1225,12 +1280,13 @@ else{
       // alert('here3');
       $scope.userItem.watchList.push(event);
       // alert('here4');
-      $scope.notifications.push({message:message,notDate:notDate});
+      $scope.notifications.push({message:message,notDate:notDate,tap:tap});
       // alert('here5');
 
       $http.post('http://stark-eyrie-6720.herokuapp.com/watchEvent',
         {userProfId:userProfId,
           message:message,
+          tap:tap,
           message2:message2,
           notDate:notDate,
           eventObj:event
@@ -1476,5 +1532,5 @@ else{
     };
 
     // $scope.countFollowers();
-    $scope.loadFeed();
+    // $scope.loadFeed();
   });
