@@ -1,4 +1,4 @@
-angular.module('sociogram', ['ionic', 'openfb','objectFilters','sociogram.controllers','sociogram.services'])
+angular.module('sociogram', ['ionic', 'openfb','objectFilters','sociogram.controllers','sociogram.services','ionic.contrib.ui.cards'])
 
     .run(function ($rootScope, $state, $ionicPlatform, $window, OpenFB) {
 
@@ -12,6 +12,7 @@ angular.module('sociogram', ['ionic', 'openfb','objectFilters','sociogram.contro
         //     }
 // && toState.name !== "app.logout"
         // });
+
 
         $rootScope.$on('$stateChangeStart', function(event, toState) {
 

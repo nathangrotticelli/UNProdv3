@@ -768,11 +768,18 @@ angular.module('sociogram.controllers', ['ionic'])
      window.plugins.socialsharing.share(a,b,c,d);
     };
   })
+// .controller('CardCtrl', function ($scope, $ionicSwipeCardDelegate) {
+//   $scope.goAway = function() {
+//     var card = $ionicSwipeCardDelegate.getSwipebleCard($scope);
+//     card.swipe();
+//   };
+// })
 
   //controller for event feed, starts analytics when people enter
-  .controller('FeedCtrl', function ($scope,$state,$http, $ionicScrollDelegate,$ionicPopup, $ionicPopover,$stateParams, OpenFB, PetService, $location, $ionicLoading) {
+  .controller('FeedCtrl', function ($scope,$state,$http,$ionicSwipeCardDelegate, $ionicScrollDelegate, $ionicPopup, $ionicPopover,$stateParams, OpenFB, PetService, $location, $ionicLoading) {
     // $scope.main = {};
     $scope.main.dragContent = true;
+    $scope.startCard=true;
     //  alert($scope.main.dragContent);
     analytics.startTrackerWithId('UA-53156722-1');
     analytics.trackView('Event Feed Accessed');
@@ -782,11 +789,171 @@ angular.module('sociogram.controllers', ['ionic'])
   }).then(function(popover) {
     $scope.popover = popover;
   });
+// $scope.goAway = function() {
+//     var card = $ionicSwipeCardDelegate.getSwipebleCard($scope);
+//     card.swipe();
+//   };
+
+
+
+
+  // alert($scope.cards);
+  // alert($index);
+
+
+
+   $scope.cardGetter = function() {
+    var answerArray = [];
+    // alert('here');
+    var a3=PetService.getEvents();
+
+    for(var key in a3){
+      answerArray.push(a3[key]);
+    }
+    return answerArray;
+
+  // alert($scope.cards);
+  };
+
+   $scope.cards = $scope.cardGetter();
+
+   // alert($scope.cardTypes.length);
+   // var a4 = $scope.cardTypes;
+  // $scope.cards = a4.slice.call(a4, 0);
+  // alert($scope.cards.length);
+
+
+
+$scope.arrayObjectIndexOf=function(myArray, searchTerm, property) {
+    for(var i = 0, len = myArray.length; i < len; i++) {
+        if (myArray[i][property] === searchTerm){
+            console.log
+           return i;
+        }
+    }
+    return -1;
+};
+
+ // $scope.cardSwiped = function() {
+ //    $scope.addCard(undefined);
+ //  };
+
+  // $scope.cardDestroyed = function(card) {
+
+
+  // alert('here2');
+// var positionOfCard = $scope.arrayObjectIndexOf($scope.cards, cardName, "name");
+ // alert(positionOfCard);// 1
+   // alert('here98');
+   // alert(positionOfCard);
+
+// console.log(a);
+    // var newCar = index;
+    // var newCard = $scope.cards[positionOfCard];
+
+  // alert('here2020');
+    // newCard.id = Math.random();
+    // $scope.cards.push(angular.extend({}, newCard));
+  // alert($scope.cards[positionOfCard].name);
+  // $scope.cards[positionOfCard] = undefined;
+  // alert($scope.cards[positionOfCard].name);
+
+    // $scope.cards.splice(positionOfCard, 1);
+  // };
+
+  // $scope.addCard2 = function() {
+  //    $scope.addCard
+  // };
+// .success(function(){
+//           $scope.card = $scope.cards[positionOfCard];
+//              alert('add card workd!');
+//         });
+  $scope.tinderSwipe = function(card) {
+    // alert(cardName);
+
+      // alert(card.name);
+      // var positionOfCard = 0;
+
+      // alert(cardName);
+      // var index = $scope.arrayObjectIndexOf($scope.cards, card.name, "name");
+
+// alert('index here');
+// alert(index);
+// if (index > -1) {
+//   // alert(index);
+//   $scope.cards.splice(index, 1);
+//   alert('index here2');
+// }
+// else{
+//   // alert(index);
+//   alert('no card destroyed');
+// }
+if(card!=undefined){
+  // alert("card is undefined");
+
+
+// else if(card=="undefined"){
+//   alert("card is string");
+//   return true;
+// }
+
+      var positionOfCard = $scope.arrayObjectIndexOf($scope.cards, card.name, "name");
+      // alert(positionOfCard);
+      // var positionOfCard = $scope.arrayObjectIndexOf($scope.cards, undefined, "name");
+      // alert($scope.cards.length);
+
+      if (positionOfCard > -1) {
+  // alert(index);
+        $scope.cards.splice(positionOfCard, 1);
+         $scope.tinderSwipe($scope.cards[positionOfCard]);
+         // $scop
+      }
+      // else{
+      //   // $scope.card(card);
+      //   $scope.cards = $scope.cards;
+      //   // $scope.cards[positionOfCard];
+      // }
+        // function11();
+
+  // alert('index here2');
+
+
+}
+
+
+
+
+    // else{
+    //   alert('card is undefined');
+    // }
+
+
+    // alert(index)
+    // if(index==undefined){
+    //   index=0;
+    // }
+
+
+ // alert(positionOfCard);// 1
+// console.log(a);
+    // var newCar = index;
+    // alert('here22222');
+    // $scope.card = $scope.cards[positionOfCard];
+    // alert(newCard.name);
+
+    // newCard.id = Math.random();
+    // $scope.cards.push(newCard);
+  };
+
+// $scope.card = $scope.tinderSwipe(card);
+
+
    $scope.shareBtn = function(a,b,c,d){
       analytics.trackEvent('button', 'click', 'share button', 1);
       // ga('send', 'event', 'button', 'click', 'share button', 1);
      window.plugins.socialsharing.share(a,b,c,d);
     };
+
     $scope.foll6 = function(timestamp){
       return new Date (timestamp).toDateString();
     };
@@ -805,6 +972,48 @@ angular.module('sociogram.controllers', ['ionic'])
 
   $scope.followNot = function(not){
     var userProfId = PetService.getUserId();
+
+if(not.date){
+     var a = new Date( not.date);
+  var b = new Date(Date.now());
+  var c = a.setDate(a.getDate() + 1);
+// alert(c);
+if(c>=b){
+  var presEvent = true;
+}
+else{
+  var presEvent = false;
+}
+
+}
+
+
+// alert(c>=b);
+    // var a = new Date(not.date);
+
+    // var eventDate = new Date(not.date1);
+ // eventDate2 = "11/06/2014";
+// var d = new Date("2012-02-29")
+// console.log(d)
+// Wed Feb 29 2012 11:00:00 GMT+1100 (EST)
+
+
+  // ale/rt(a);
+ // alert(b);
+ // if(a>=b){
+
+ // }
+
+
+
+
+
+// var b = Date.now();
+// var Xmas95 = new Date(a).getDate();
+// var day2 = new Date(Date.now()).getDate();
+// var day = Xmas95.getDate();
+
+// console.log(day>=day2);
     // alert(tap);
 
 //call follow function with user object
@@ -820,7 +1029,7 @@ angular.module('sociogram.controllers', ['ionic'])
             // alert('hwe233333');
 
               var followingId = not.followId;
-              var notDate = "9/17/1995";
+              var notDate = Date.now();
               var message = userName+" just followed you.";
          // alert(message);
          // alert
@@ -873,8 +1082,10 @@ angular.module('sociogram.controllers', ['ionic'])
 
 
     }
-    else if(not.tap=="event"){
+
+    else if(not.tap=="event"&&presEvent==true){
       // alert('event');
+      // &&not.date>Date.now()
        // alert(not.message.split(": ")[1]);
 
        var i = not.message.indexOf(': ');
@@ -884,6 +1095,7 @@ var splits = not.message.slice(i+1);
 // alert("12345.00.".slice(0,-1));
 var eventName = splits.slice(0,-1);
 // alert(PetService.getEvents());
+// alert(eventName);
 // alert(PetService.getEvents());
 // alert(JSON.stringify($scope.events));
 // alert(eventName);
@@ -897,9 +1109,11 @@ for(event in $scope.events){
   // alert($scope.events[event]==eventName);
   // alert(event.start_time);
   if(eventName.indexOf($scope.events[event].name.slice(0,-1))>-1){
-
+    // alert($scope.events[event].name);
+    // alert(eventName);
      $scope.go_here($scope.events[event]);
   }
+
 }
 // alert($scope.event[eventName]);
 // alert($scope.events[eventName].name);
@@ -918,8 +1132,11 @@ for(event in $scope.events){
 
     }
     else{
+      // alert((not.tap=="event"));
+      // alert(not.eventDate);
+      // alert(new Date(not.eventDate).getDate() >= new Date(Date.now()).getDate());
       //do nothing
-      alert('ney');
+      $scope.showAlert("The date for this event has passed.","Bummer!");
     }
 
   };
@@ -1586,5 +1803,5 @@ else{
     };
 
     // $scope.countFollowers();
-    // $scope.loadFeed();
+    $scope.loadFeed();
   });

@@ -7,10 +7,14 @@ angular.module('sociogram.services', [])
   var unFriends = [];
   var userProfId = "";
   var newUser = "no";
+
   // var unFriends = [];
   // var notifications = {};
 
   return {
+    getCache: function () {
+                return profileCache;
+            },
    				getEvents: function () {
                 return events;
             },
